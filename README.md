@@ -1,4 +1,4 @@
-# ♻️ EcoRoute Pro  
+# ♻️ EcoSphere Pro  
 ### AI + IoT Powered Smart Waste Management & Route Optimization System  
 #### (BTech CSE – AI & ML | Thesis-Grade Project)
 

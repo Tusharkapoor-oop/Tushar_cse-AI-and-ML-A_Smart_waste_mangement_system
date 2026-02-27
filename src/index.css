@@ -1,0 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  font-family: Inter, sans-serif;
+  background:
+    radial-gradient(circle at 15% 20%, rgba(45, 246, 164, 0.15), transparent 30%),
+    radial-gradient(circle at 80% 0%, rgba(35, 211, 255, 0.15), transparent 30%),
+    #060b1d;
+}

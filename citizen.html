@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Citizen Portal - EcoRoute Pro</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;800&display=swap');
+
+        :root {
+            --primary: #10b981;
+            --primary-glow: rgba(16, 185, 129, 0.4);
+            --bg: #0A0A0A;
+            --card: #141414;
+            --text: #FFFFFF;
+            --text-muted: #666666;
+            --border: rgba(255, 255, 255, 0.1);
+            --error: #FF4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .app-header {
+            padding: 24px;
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .app-header .logo-box {
+            width: 44px;
+            height: 44px;
+            background: var(--primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+            box-shadow: 0 0 20px var(--primary-glow);
+        }
+
+        .app-header h1 {
+            font-size: 20px;
+            font-weight: 900;
+            letter-spacing: -0.04em;
+            text-transform: uppercase;
+            font-style: italic;
+        }
+
+        .content {
+            flex: 1;
+            padding: 32px 24px;
+            max-width: 500px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .welcome-section {
+            margin-bottom: 40px;
+        }
+
+        .welcome-section h2 {
+            font-size: 48px;
+            font-weight: 900;
+            letter-spacing: -0.06em;
+            line-height: 0.9;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            font-style: italic;
+        }
+
+        .welcome-section p {
+            color: var(--text-muted);
+            font-size: 16px;
+            line-height: 1.5;
+            font-weight: 500;
+        }
+
+        .card {
+            background: var(--card);
+            border-radius: 32px;
+            padding: 32px;
+            border: 1px solid var(--border);
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.5);
+        }
+
+        .form-group {
+            margin-bottom: 32px;
+        }
+
+        label {
+            display: block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+        }
+
+        .select-wrapper {
+            position: relative;
+        }
+
+        select {
+            width: 100%;
+            padding: 20px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background-color: #000;
+            color: white;
+            font-family: inherit;
+            font-size: 16px;
+            font-weight: 700;
+            appearance: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px var(--primary-glow);
+        }
+
+        .select-wrapper::after {
+            content: "";
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23666666' stroke-width='3'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: center;
+            pointer-events: none;
+        }
+
+        .upload-area {
+            position: relative;
+            width: 100%;
+            height: 240px;
+            border: 1px dashed var(--border);
+            border-radius: 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+            background: #000;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary);
+            background: rgba(16, 185, 129, 0.05);
+        }
+
+        .upload-area.has-file {
+            border-style: solid;
+            border-color: var(--primary);
+        }
+
+        .upload-area svg {
+            color: var(--text-muted);
+            transition: transform 0.3s;
+        }
+
+        .upload-area:hover svg {
+            transform: scale(1.1);
+            color: var(--primary);
+        }
+
+        .upload-area span {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        #imageInput {
+            display: none;
+        }
+
+        #preview {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+            filter: brightness(0.8);
+        }
+
+        .btn-report {
+            width: 100%;
+            padding: 24px;
+            background-color: var(--primary);
+            color: #000;
+            border: none;
+            border-radius: 24px;
+            font-size: 16px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            margin-top: 12px;
+            box-shadow: 0 20px 40px -10px var(--primary-glow);
+        }
+
+        .btn-report:hover {
+            transform: translateY(-4px);
+            background: #34d399;
+            box-shadow: 0 25px 50px -12px var(--primary-glow);
+        }
+
+        .btn-report:active {
+            transform: translateY(0);
+        }
+
+        .btn-report:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            transform: none;
+            filter: grayscale(1);
+        }
+
+        .status-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .status-overlay.visible {
+            display: flex;
+        }
+
+        .loader {
+            width: 64px;
+            height: 64px;
+            border: 4px solid var(--border);
+            border-bottom-color: var(--primary);
+            border-radius: 50%;
+            display: inline-block;
+            box-sizing: border-box;
+            animation: rotation 1s linear infinite;
+            margin-bottom: 32px;
+        }
+
+        @keyframes rotation {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .success-icon {
+            width: 100px;
+            height: 100px;
+            background: var(--primary);
+            border-radius: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+            margin-bottom: 32px;
+            animation: pop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            box-shadow: 0 0 40px var(--primary-glow);
+        }
+
+        @keyframes pop {
+            0% { transform: scale(0) rotate(-45deg); opacity: 0; }
+            100% { transform: scale(1) rotate(0); opacity: 1; }
+        }
+
+        .status-overlay h3 {
+            font-size: 32px;
+            font-weight: 900;
+            margin-bottom: 16px;
+            letter-spacing: -0.04em;
+            text-transform: uppercase;
+            font-style: italic;
+        }
+
+        .status-overlay p {
+            color: var(--text-muted);
+            font-size: 16px;
+            line-height: 1.6;
+            max-width: 320px;
+            font-weight: 500;
+        }
+
+        .verification-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--primary);
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 24px;
+            border: 1px solid var(--primary-glow);
+        }
+
+        .btn-done {
+            margin-top: 48px;
+            background: #1A1A1A;
+            color: white;
+            padding: 20px 48px;
+            border-radius: 20px;
+            font-weight: 800;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-done:hover {
+            background: #222;
+            border-color: rgba(255,255,255,0.2);
+        }
+    </style>
+</head>
+<body>
+
+    <header class="app-header">
+        <div class="logo-box">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 6h18"></path>
+                <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+            </svg>
+        </div>
+        <h1>EcoRoute Citizen</h1>
+    </header>
+
+    <main class="content">
+        <section class="welcome-section">
+            <h2>Report<br>Overflow</h2>
+            <p>Help us optimize collection by reporting full bins in your area.</p>
+        </section>
+
+        <div class="card">
+            <div class="form-group">
+                <label>Target Location</label>
+                <div class="select-wrapper">
+                    <select id="binSelect">
+                        <option value="" disabled selected>Loading grid nodes...</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Visual Evidence</label>
+                <label for="imageInput" class="upload-area" id="uploadArea">
+                    <svg id="uploadIcon" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                        <circle cx="12" cy="13" r="4"></circle>
+                    </svg>
+                    <span id="uploadText">Capture or Select Photo</span>
+                    <img id="preview" alt="Preview">
+                </label>
+                <input type="file" id="imageInput" accept="image/*">
+            </div>
+
+            <button id="reportBtn" class="btn-report">Transmit Report</button>
+        </div>
+    </main>
+
+    <div id="statusOverlay" class="status-overlay">
+        <div id="loadingState" style="display: flex; flex-direction: column; align-items: center;">
+            <span class="loader"></span>
+            <h3>Verifying Data</h3>
+            <p>Analyzing visual evidence and updating tactical collection routes...</p>
+        </div>
+        <div id="successState" style="display: none; flex-direction: column; align-items: center;">
+            <div class="success-icon">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+            </div>
+            <div class="verification-tag">AI Validated</div>
+            <h3>Report Secured</h3>
+            <p>Mission updated. Our fleet has been rerouted to prioritize this location.</p>
+            <button onclick="resetApp()" class="btn-done">Dismiss</button>
+        </div>
+    </div>
+
+    <script>
+        const binSelect = document.getElementById('binSelect');
+        const imageInput = document.getElementById('imageInput');
+        const uploadArea = document.getElementById('uploadArea');
+        const uploadText = document.getElementById('uploadText');
+        const uploadIcon = document.getElementById('uploadIcon');
+        const preview = document.getElementById('preview');
+        const reportBtn = document.getElementById('reportBtn');
+        const statusOverlay = document.getElementById('statusOverlay');
+        const loadingState = document.getElementById('loadingState');
+        const successState = document.getElementById('successState');
+
+        async function loadBins() {
+            try {
+                const response = await fetch('/api/bins');
+                const bins = await response.json();
+                binSelect.innerHTML = '<option value="" disabled selected>Select Grid Node</option>';
+                bins.sort((a, b) => a.binID.localeCompare(b.binID));
+                bins.forEach(bin => {
+                    const option = document.createElement('option');
+                    option.value = bin.binID;
+                    option.textContent = `${bin.binID} - Pitampura Sector`;
+                    binSelect.appendChild(option);
+                });
+            } catch (error) {
+                binSelect.innerHTML = '<option value="" disabled>Network Error</option>';
+            }
+        }
+
+        imageInput.addEventListener('change', () => {
+            const file = imageInput.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                    uploadArea.classList.add('has-file');
+                    uploadText.style.display = 'none';
+                    uploadIcon.style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        reportBtn.addEventListener('click', async () => {
+            const binID = binSelect.value;
+            const imageFile = imageInput.files[0];
+
+            if (!binID || !imageFile) {
+                alert('Incomplete report. Please select a node and provide evidence.');
+                return;
+            }
+
+            statusOverlay.classList.add('visible');
+            loadingState.style.display = 'flex';
+            successState.style.display = 'none';
+
+            const formData = new FormData();
+            formData.append('binID', binID);
+            formData.append('image', imageFile);
+
+            try {
+                const response = await fetch('/api/report-surge', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    setTimeout(() => {
+                        loadingState.style.display = 'none';
+                        successState.style.display = 'flex';
+                    }, 2500); // Simulate AI processing
+                } else {
+                    alert('Transmission failed. System busy.');
+                    statusOverlay.classList.remove('visible');
+                }
+            } catch (error) {
+                alert('Connection lost.');
+                statusOverlay.classList.remove('visible');
+            }
+        });
+
+        function resetApp() {
+            statusOverlay.classList.remove('visible');
+            binSelect.value = '';
+            imageInput.value = '';
+            preview.style.display = 'none';
+            uploadArea.classList.remove('has-file');
+            uploadText.style.display = 'block';
+            uploadIcon.style.display = 'block';
+        }
+
+        loadBins();
+    </script>
+</body>
+</html>
